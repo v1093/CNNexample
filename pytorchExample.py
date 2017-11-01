@@ -65,7 +65,8 @@ class Net(nn.Module):
         x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2, 1))
         
         x = x.view(-1, 5408)
-        x = F.relu(self.fc1(x))
+        x = F.tanh(self.fc1(x))
+        
         x = F.dropout(x, training=self.training)
         x = self.fc2(x)
         return F.log_softmax(x)
@@ -75,7 +76,7 @@ print(model)
 if args.cuda:
     model.cuda()
 
-optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
+optimizer = optim.Adam(model.parameters())#, lr=args.lr, momentum=args.momentum)
 
 def train(epoch):
     model.train()
